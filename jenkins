@@ -1,9 +1,9 @@
-
 pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'myapp'
+        IMAGE_NAME = 'test'
+        IMAGE_TAG = 'v1'
         CONTAINER_NAME = 'myapp'
         HOST_PORT = '8082'
     }
@@ -23,7 +23,7 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                sh 'docker build -t ${IMAGE_NAME}:latest .'
+                sh 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .'
             }
         }
 
@@ -32,7 +32,7 @@ pipeline {
                 sh '''
                     docker stop ${CONTAINER_NAME} || true
                     docker rm ${CONTAINER_NAME} || true
-                    docker run -d --name ${CONTAINER_NAME} -p ${HOST_PORT}:80 ${IMAGE_NAME}:latest
+                    docker run -d --name ${CONTAINER_NAME} -p ${HOST_PORT}:80 ${IMAGE_NAME}:${IMAGE_TAG}
                 '''
             }
         }
